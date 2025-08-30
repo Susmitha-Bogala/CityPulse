@@ -1,93 +1,51 @@
-import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ProfileScreen from '../screens/ProfileScreen';
-import {TMEvent} from '../types/event';
-import {colors} from '../colors';
-import HomeStack from './HomeStack';
-import FavoriteStack from './FavoriteStack';
+import React, {useEffect, useState} from 'react';
+import {I18nManager, ActivityIndicator, View} from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import AppStack from './AppStack';
+import AuthStack from './AuthStack';
+import {initI18n} from '../i18n';
+import styles from '../styles';
+import {useAuth} from '../contexts/AuthContext';
 
-const Tab = createBottomTabNavigator();
+const AppNavigator: React.FC = () => {
+  const {isLoggedIn, setIsLoggedIn} = useAuth();
+  const [i18nReady, setI18nReady] = useState<boolean>(false);
 
-export type TabParamList = {
-  Home: undefined;
-  FavoriteStack: undefined;
-  Profile: {
-    toggleLanguage: (lang: 'en' | 'ar') => void;
-    setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-};
+  useEffect(() => {
+    const initializeApp = async () => {
+      await initI18n();
+      const lang = await AsyncStorage.getItem('app_language');
+      const isArabic = lang === 'ar';
+      I18nManager.allowRTL(isArabic);
+      I18nManager.forceRTL(isArabic);
 
-interface AppNavigatorProps {
-  toggleLanguage: (lang: 'en' | 'ar') => void;
-  setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+      try {
+        const token = await AsyncStorage.getItem('current_user');
+        setIsLoggedIn(!!token);
+      } catch (e) {
+        setIsLoggedIn(false);
+      } finally {
+        RNBootSplash.hide({fade: true});
+        setI18nReady(true);
+      }
+    };
 
-const TabBarIcon = ({
-  route,
-  color,
-  size,
-}: {
-  route: {name: string};
-  color: string;
-  size: number;
-}) => {
-  let iconName: string;
+    initializeApp();
+  }, []);
 
-  switch (route.name) {
-    case 'Home':
-      iconName = 'home';
-      break;
-    case 'Favorite':
-      iconName = 'heart-sharp';
-      break;
-    case 'Profile':
-      iconName = 'person-sharp';
-      break;
-    default:
-      iconName = 'ellipse';
+  if (!i18nReady || isLoggedIn === null) {
+    return (
+      <SafeAreaProvider>
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      </SafeAreaProvider>
+    );
   }
 
-  return <Ionicons name={iconName} size={size} color={color} />;
-};
-
-const AppNavigator: React.FC<AppNavigatorProps> = props => {
-  const {toggleLanguage, setIsLoggedIn} = props;
-
-  const {primary, lightGray} = colors;
-
-  const tabBarOptions = {
-    tabBarActiveTintColor: primary,
-    tabBarInactiveTintColor: lightGray,
-  };
-
-  return (
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({color, size}) => TabBarIcon({route, color, size}),
-      })}>
-      <Tab.Screen
-        name="Home"
-        children={() => <HomeStack toggleLanguage={toggleLanguage} />}
-        options={{headerShown: false, ...tabBarOptions}}
-      />
-
-      <Tab.Screen
-        name="Favorite"
-        children={() => <FavoriteStack toggleLanguage={toggleLanguage} />}
-        options={{headerShown: false, ...tabBarOptions}}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        initialParams={{
-          toggleLanguage,
-          setIsLoggedIn,
-        }}
-        options={{headerShown: false, ...tabBarOptions}}
-      />
-    </Tab.Navigator>
-  );
+  return <>{isLoggedIn ? <AppStack /> : <AuthStack />}</>;
 };
 
 export default AppNavigator;

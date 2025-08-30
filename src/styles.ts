@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    marginTop: 20,
+    paddingVertical: 10,
     fontSize: 16,
     color: '#666',
   },
@@ -345,6 +345,33 @@ const styles = StyleSheet.create({
   authIcon: {marginBottom: 20},
   authLogo: {width: 100, height: 100},
   loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+
+  emptyFavoritesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: colors.white,
+  },
+  emptyEmoji: {
+    fontSize: 50,
+  },
+  emptyHeader: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  exploreButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  exploreButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

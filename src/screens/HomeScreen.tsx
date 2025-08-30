@@ -9,8 +9,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {searchEvents, getEventDetails} from '../api/ticketmaster';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../navigation/AppNavigator';
 import {useTranslation} from 'react-i18next';
 import {TMEvent} from '../types/event';
 import styles from '../styles';
@@ -18,15 +16,12 @@ import {colors} from '../colors';
 import EventCard from '../components/EventCard';
 import {useSnackbar} from '../components/SnackbarProvider';
 import {useDebouncedCallback} from '../hooks/useDebouncedCallback';
+import {useNavigation} from '@react-navigation/native';
+import screenNames from '../screenNames';
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation();
 
-type Props = {navigation: HomeScreenNavigationProp};
-
-const HomeScreen: React.FC<Props> = ({navigation}) => {
   const {t} = useTranslation();
   const [keyword, setKeyword] = useState('');
   const [city, setCity] = useState('');
@@ -68,7 +63,9 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     return (
       <EventCard
         event={item}
-        onPress={() => navigation.navigate('EventDetail', {event: item})}
+        onPress={() =>
+          navigation.navigate(screenNames.EVENT_DETAIL, {event: item})
+        }
       />
     );
   };

@@ -6,21 +6,27 @@ import {saveUser} from '../../storage/user';
 import {useSnackbar} from '../../components/SnackbarProvider';
 import {colors} from '../../colors';
 import styles from '../../styles';
+import {useAuth} from '../../contexts/AuthContext';
 
 const SignupScreen = ({navigation}: any) => {
   const {t} = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {showSnackbar} = useSnackbar();
+  const {setIsLoggedIn} = useAuth();
 
   const handleSignup = async () => {
+    if (!email || !password) {
+      showSnackbar(t('email_password_required'), 'error');
+      return;
+    }
     try {
       const user = await signUpWithEmail(email, password);
-      await saveUser({email: email, uid: user.uid});
+      await saveUser({email: user.email, uid: user.uid});
       showSnackbar(t('signup_success'), 'success');
-      navigation.replace('Home'); // go to landing page
+      setIsLoggedIn(true);
     } catch (error: any) {
-      showSnackbar(t('error'), 'error');
+      showSnackbar(error.message, 'error');
     }
   };
 

@@ -54,6 +54,10 @@
     "logout_confirm": "Confirm",    
     "email_password_required": "Email and password are required",
     "no_events_found": "No events found for",
+    "signup_success": "Signed up successfully!",
+    "no_favorites_title": "No favorites yet",
+    "no_favorites_subtitle": "Explore and add your favorite events",
+    "explore_events": "Explore Events",
     "about_me_details": "Passionate event-goer who loves concerts, comedy shows, and sports. Always looking for the next great experience."
   }
   
