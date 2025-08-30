@@ -20,6 +20,7 @@ Make sure the following tools are installed on your machine:
 
 ---
 
+Find Demo Recording and screenshots using this link:  https://drive.google.com/drive/folders/11_136kaNbrpi-Xdk2h9jjSM1f83sPP1_?usp=sharing
 ## ⚙️ Setup Instructions
 
 ```bash
@@ -41,11 +42,6 @@ cd ios && pod install && cd ..
 #Step5: Run android or IOS
 npx react-native run-android
 npx react-native run-ios
-
-
-Demo Recording
-Android: https://drive.google.com/drive/folders/11_136kaNbrpi-Xdk2h9jjSM1f83sPP1_?usp=sharing
-
 
 
 ```
