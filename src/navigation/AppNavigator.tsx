@@ -1,31 +1,93 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import SplashScreen from '../screens/SplashScreen';
-import HomeScreen from '../screens/HomeScreen';
-// import EventDetailsScreen from '../screens/EventDetailsScreen';
-// import ProfileScreen from '../screens/ProfileScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ProfileScreen from '../screens/ProfileScreen';
+import {TMEvent} from '../types/event';
+import {colors} from '../colors';
+import HomeStack from './HomeStack';
+import FavoriteStack from './FavoriteStack';
 
-export type RootStackParamList = {
-  Splash: undefined;
+const Tab = createBottomTabNavigator();
+
+export type TabParamList = {
   Home: undefined;
-  EventDetails: {eventId: string};
-  Profile: undefined;
+  FavoriteStack: undefined;
+  Profile: {
+    toggleLanguage: (lang: 'en' | 'ar') => void;
+    setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+interface AppNavigatorProps {
+  toggleLanguage: (lang: 'en' | 'ar') => void;
+  setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const AppNavigator = () => (
-  <NavigationContainer>
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{headerShown: true}}>
-      {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
-      <Stack.Screen name="Home" component={HomeScreen} />
-      {/* <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} /> */}
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+const TabBarIcon = ({
+  route,
+  color,
+  size,
+}: {
+  route: {name: string};
+  color: string;
+  size: number;
+}) => {
+  let iconName: string;
+
+  switch (route.name) {
+    case 'Home':
+      iconName = 'home';
+      break;
+    case 'Favorite':
+      iconName = 'heart-sharp';
+      break;
+    case 'Profile':
+      iconName = 'person-sharp';
+      break;
+    default:
+      iconName = 'ellipse';
+  }
+
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
+
+const AppNavigator: React.FC<AppNavigatorProps> = props => {
+  const {toggleLanguage, setIsLoggedIn} = props;
+
+  const {primary, lightGray} = colors;
+
+  const tabBarOptions = {
+    tabBarActiveTintColor: primary,
+    tabBarInactiveTintColor: lightGray,
+  };
+
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({color, size}) => TabBarIcon({route, color, size}),
+      })}>
+      <Tab.Screen
+        name="Home"
+        children={() => <HomeStack toggleLanguage={toggleLanguage} />}
+        options={{headerShown: false, ...tabBarOptions}}
+      />
+
+      <Tab.Screen
+        name="Favorite"
+        children={() => <FavoriteStack toggleLanguage={toggleLanguage} />}
+        options={{headerShown: false, ...tabBarOptions}}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        initialParams={{
+          toggleLanguage,
+          setIsLoggedIn,
+        }}
+        options={{headerShown: false, ...tabBarOptions}}
+      />
+    </Tab.Navigator>
+  );
+};
 
 export default AppNavigator;
