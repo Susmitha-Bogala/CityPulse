@@ -4,6 +4,7 @@ import React from 'react';
 import {openUrl} from '../utils';
 import styles from '../styles';
 import {colors} from '../colors';
+import {icons} from '../constants';
 
 type LocationProps = {
   event: {
@@ -46,7 +47,7 @@ const Location: React.FC<LocationProps> = ({event}) => {
 
   return (
     <TouchableOpacity style={styles.row} onPress={handleOpenMaps}>
-      <Icon name="location-outline" size={18} color={colors.primary} />
+      <Icon name={icons.location} size={18} color={colors.primary} />
       <Text
         style={[styles.metaText, {color: colors.primary}]}
         numberOfLines={2}>

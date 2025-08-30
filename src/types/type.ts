@@ -59,3 +59,5 @@ export interface EventCardProps {
   event: TMEvent;
   onPress: () => void;
 }
+
+export type SnackbarType = 'success' | 'error' | 'info' | 'warning';

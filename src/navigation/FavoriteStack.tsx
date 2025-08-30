@@ -13,12 +13,7 @@ export type FavoriteStackParamList = {
 
 const Stack = createNativeStackNavigator<FavoriteStackParamList>();
 
-interface AppNavigatorProps {
-  toggleLanguage: (lang: 'en' | 'ar') => void;
-  setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const FavoriteStack: React.FC<AppNavigatorProps> = () => {
+const FavoriteStack: React.FC = () => {
   const {t} = useTranslation();
 
   return (

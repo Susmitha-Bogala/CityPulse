@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StatusBar,
   Alert,
@@ -18,26 +17,19 @@ import {SNACKBAR_TYPES} from '../constants';
 import styles from '../styles';
 import {colors} from '../colors';
 import {getUser} from '../storage/user';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {FavoriteStackParamList} from '../navigation/FavoriteStack';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '../contexts/AuthContext';
+import {useLanguage} from '../contexts/LanguageContext';
+import {getFormattedNameFromEmail} from '../utils';
+import {icons} from '../constants';
 
 import i18n from '../i18n';
 import {removeUser} from '../storage/user';
 
-interface ProfileScreenProps {
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleLanguage: (lang: 'en' | 'ar') => void;
-  navigation: NativeStackNavigationProp<FavoriteStackParamList>;
-}
-
-const ProfileScreen: React.FC<ProfileScreenProps> = () => {
+const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const {toggleLanguage, setIsLoggedIn} = route.params as {
-    toggleLanguage: (lang: 'en' | 'ar') => void;
-    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+  const {toggleLanguage} = useLanguage();
+  const {setIsLoggedIn} = useAuth();
   const {showSnackbar} = useSnackbar();
   const {t} = useTranslation();
   const [user, setUser] = useState<any>(null);
@@ -90,19 +82,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     ]);
   };
 
-  console.log('navigation', navigation);
-
   const actionItems = [
     {
       key: 'my_tickets',
-      icon: 'ticket-outline',
+      icon: icons.ticket,
       color: colors.boldViolet,
       text: t('my_tickets'),
       onPress: () => {},
     },
     {
       key: 'favorites',
-      icon: 'heart-outline',
+      icon: icons.heartOutline,
       color: colors.favorite,
       text: t('favorites'),
       onPress: () =>
@@ -115,14 +105,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     },
     {
       key: 'settings',
-      icon: 'settings-outline',
+      icon: icons.settings,
       color: colors.softGreen,
       text: t('settings'),
       onPress: () => {},
     },
     {
       key: 'change_language',
-      icon: 'language-outline',
+      icon: icons.language,
       color: colors.darkBlue,
       text:
         i18n.language === 'ar' ? t('change_to_english') : t('change_to_arabic'),
@@ -130,7 +120,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     },
     {
       key: 'logout',
-      icon: 'log-out-outline',
+      icon: icons.logout,
       color: colors.error,
       text: t('logout'),
       onPress: handleLogout,
@@ -142,13 +132,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       <Ionicons name={item.icon} size={22} color={item.color} />
       <Text style={styles.actionText}>{t(item.text)}</Text>
       <Ionicons
-        name="chevron-forward-outline"
+        name={i18n.language === 'ar' ? icons.chevronBack : icons.chevronForward}
         size={20}
         color={colors.darkGray}
         style={styles.arrow}
       />
     </TouchableOpacity>
   );
+
+  const userName = getFormattedNameFromEmail(user?.email);
 
   return (
     <>
@@ -157,11 +149,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         <LinearGradient
           colors={[colors.gradient2, colors.gradient3]}
           style={styles.profileHeader}>
-          <Image
-            source={{uri: 'https://i.pravatar.cc/150?img=12'}}
-            style={styles.avatar}
-          />
-          <Text style={styles.name}>John Doe</Text>
+          <Ionicons name={icons.person} size={90} color={colors.white} />
+          <Text style={styles.name}>{userName}</Text>
           <Text style={styles.email}>{user?.email}</Text>
         </LinearGradient>
 

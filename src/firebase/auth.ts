@@ -1,15 +1,15 @@
 import auth from '@react-native-firebase/auth';
-
+import {Platform} from 'react-native';
 import firebase from '@react-native-firebase/app';
-import firebaseConfig from '../../firebaseConfig';
+
+import {iosFirebaseConfig, androidFirebaseConfig} from '../../firebaseConfig';
 import {saveUser} from '../storage/user';
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(
+    Platform.OS === 'ios' ? iosFirebaseConfig : androidFirebaseConfig,
+  );
 }
-
-export default firebase;
-
 // Signup
 export const signUpWithEmail = async (email: string, password: string) => {
   try {

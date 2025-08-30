@@ -9,21 +9,15 @@ export type AuthStackParamList = {
   Login: undefined;
 };
 
-interface AuthStackProps {
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
-const AuthStack: React.FC<AuthStackProps> = ({setIsLoggedIn}) => {
+const AuthStack: React.FC = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Login"
         options={{headerShown: false}}
-        children={props => (
-          <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />
-        )}
+        component={LoginScreen}
       />
       <Stack.Screen
         name="Signup"

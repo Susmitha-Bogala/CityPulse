@@ -6,20 +6,16 @@ import {saveUser} from '../../storage/user';
 import {useSnackbar} from '../../components/SnackbarProvider';
 import {colors} from '../../colors';
 import styles from '../../styles';
+import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '../../contexts/AuthContext';
 
-interface LoginScreenProps {
-  navigation: any;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const LoginScreen: React.FC<LoginScreenProps> = ({
-  navigation,
-  setIsLoggedIn,
-}) => {
+const LoginScreen: React.FC = () => {
   const {t} = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {showSnackbar} = useSnackbar();
+  const navigation = useNavigation();
+  const {setIsLoggedIn} = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {

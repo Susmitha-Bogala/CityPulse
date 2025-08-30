@@ -17,12 +17,7 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-interface AppNavigatorProps {
-  toggleLanguage: (lang: 'en' | 'ar') => void;
-  setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const HomeStack: React.FC<AppNavigatorProps> = () => {
+const HomeStack: React.FC = () => {
   const {t} = useTranslation();
 
   return (

@@ -12,16 +12,27 @@ import {openUrl} from '../utils';
 import {useTranslation} from 'react-i18next';
 import styles from '../styles';
 import {colors} from '../colors';
+import {icons} from '../constants';
+import {formatDataTime} from '../utils';
 
 const EventDetailScreen = ({route}: any) => {
   const {event} = route.params;
-
-  const imageUrl = event.images?.[0]?.url;
-  const date = event.dates?.start?.localDate;
-  const time = event.dates?.start?.localTime;
-  const venue = event._embedded?.venues?.[0];
-  const performers = event._embedded?.attractions || [];
-  const ticketUrl = event.url;
+  const {
+    name: eventName = '',
+    dates: {start: {localDate: date = '', localTime: time = ''}} = {},
+    _embedded: {attractions: performers = [], venues = []},
+    images: [{url: thumbnailUrl = ''}] = [],
+    url: ticketUrl = '',
+    info: eventInfo = '',
+    pleaseNote = '',
+    ticketLimit: {info: ticketLimitInfo = ''} = {},
+    seatmap: {staticUrl: seatmapUrl = ''} = {},
+  } = event;
+  const venue = venues?.[0];
+  const formattedDate = formatDataTime(date, time, {
+    withDate: true,
+    hour12: false,
+  });
 
   const {favorites, toggleFavorite} = useFavorites();
   const {t} = useTranslation();
@@ -29,10 +40,9 @@ const EventDetailScreen = ({route}: any) => {
 
   return (
     <ScrollView style={styles.eventDetailsContainer}>
-      {/* Hero Image */}
       <View style={styles.imageContainer}>
-        {imageUrl && (
-          <Image source={{uri: imageUrl}} style={styles.heroImage} />
+        {thumbnailUrl && (
+          <Image source={{uri: thumbnailUrl}} style={styles.heroImage} />
         )}
         <LinearGradient
           colors={[colors.gradient1, colors.transparent]}
@@ -42,7 +52,7 @@ const EventDetailScreen = ({route}: any) => {
           onPress={() => toggleFavorite(event)}
           style={styles.toggleFavorite}>
           <Ionicons
-            name={isFav ? 'heart' : 'heart-outline'}
+            name={isFav ? icons.heart : icons.heartOutline}
             size={28}
             color={isFav ? colors.favorite : colors.white}
           />
@@ -50,26 +60,22 @@ const EventDetailScreen = ({route}: any) => {
       </View>
 
       <View style={styles.eventDetailsCard}>
-        <Text style={styles.eventDetailsTitle}>{event.name}</Text>
+        <Text style={styles.eventDetailsTitle}>{eventName}</Text>
         <View style={styles.row}>
-          <Icon name="time-outline" size={18} color={colors.text} />
-          <Text style={[styles.metaText]}>
-            {date} {time && `• ${time}`}
-          </Text>
+          <Icon name={icons.time} size={18} color={colors.text} />
+          <Text style={[styles.metaText]}>{formattedDate}</Text>
         </View>
 
         {venue && <Location event={event} />}
 
-        {/* About */}
-        {event.info && <AboutSection info={event.info} />}
+        {eventInfo && <AboutSection info={eventInfo} />}
 
-        {/* Please Note */}
-        {event.pleaseNote && (
+        {pleaseNote && (
           <View style={styles.section}>
             <Text style={[styles.eventDetailsSectionTitle]}>
               {t('please_note')}
             </Text>
-            <Text style={[styles.sectionText]}>{event.pleaseNote}</Text>
+            <Text style={[styles.sectionText]}>{pleaseNote}</Text>
           </View>
         )}
 
@@ -77,7 +83,7 @@ const EventDetailScreen = ({route}: any) => {
         <View style={styles.section}>
           <Text style={[styles.eventDetailsSectionTitle]}>{t('entry')}</Text>
           <Text style={[styles.sectionText]}>
-            Standard ticket limit: {event.ticketLimit?.info || 'N/A'}
+            Standard ticket limit: {ticketLimitInfo || 'N/A'}
           </Text>
         </View>
 
@@ -85,14 +91,14 @@ const EventDetailScreen = ({route}: any) => {
         {performers?.length > 0 && <PerfomerList performers={performers} />}
 
         {/* Seatmap */}
-        {event.seatmap?.staticUrl && (
+        {seatmapUrl && (
           <View style={styles.section}>
             <Text style={[styles.eventDetailsSectionTitle]}>
               {t('seat_map')}
             </Text>
-            <TouchableOpacity onPress={() => openUrl(event.seatmap.staticUrl)}>
+            <TouchableOpacity onPress={() => openUrl(seatmapUrl)}>
               <Image
-                source={{uri: event.seatmap.staticUrl}}
+                source={{uri: seatmapUrl}}
                 style={styles.seatmap}
                 resizeMode="contain"
               />

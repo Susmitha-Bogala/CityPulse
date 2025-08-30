@@ -8,8 +8,7 @@ import React, {
 import {Animated, Text, TouchableWithoutFeedback} from 'react-native';
 import styles from '../styles';
 import {colors} from '../colors';
-
-type SnackbarType = 'success' | 'error' | 'info' | 'warning';
+import {SnackbarType} from '../types/type';
 
 interface SnackbarContextProps {
   showSnackbar: (message: string, type?: SnackbarType) => void;
