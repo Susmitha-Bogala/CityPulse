@@ -2,9 +2,6 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
-
-
 
 
 # Project Structure
@@ -60,5 +57,4 @@ step 4: Run CityPulse app on Android or IOS
 
 2. Run `npm install` to install dependencies.
 3. Run `npm run android` or `npm run ios` to start the application on Android or iOS.
-
 
