@@ -29,17 +29,19 @@ git clone https://github.com/Susmitha-Bogala/CityPulse.git
 
 # Step 2: Navigate into the project directory
 cd CityPulse
+# step 3: checkout to develop branch
+git checkout develop
 
-# Step 3: Install dependencies
+# Step 4: Install dependencies
 npm install
 # or
 yarn install
 
-# Step 4: Install iOS pods (for iOS only)
+# Step 5: Install iOS pods (for iOS only)
 cd ios && pod install && cd ..
 
 
-#Step5: Run android or IOS
+# Step 6: Run Android or IOS
 npx react-native run-android
 npx react-native run-ios
 
