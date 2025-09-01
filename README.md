@@ -2,14 +2,13 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 # Getting Started
 
-## 🚀 Getting Started
+
 
 # Project Structure
 
 The project is organized as follows:
 
 - **src/**: Contains the main source code for the application.
-
   - **api/**: API service files.
   - **components/**: Reusable React components.
   - **contexts/**: Context API for state management.
@@ -35,21 +34,27 @@ The project is organized as follows:
 - **AuthContext.tsx**: Provides authentication context to the app.
 - **useDebouncedCallback.ts**: Custom hook for debouncing functions.
 
+
+
+
+
 # Setup and Installation
 
-Step 1: Clone the repository.
+Step 1:  Clone the repository.
 
-`git clone https://github.com/Susmitha-Bogala/CityPulse.git`
+   `git clone https://github.com/Susmitha-Bogala/CityPulse.git`
 
 step 2: Checkout to develop branch
-`git checkout develop`
+      `git checkout develop`
 
-step 3: install dependencies
-`npm install` or `yarn intall`
+step 3:  install dependencies
+   `npm install` or `yarn intall`
 
 step 4: Run CityPulse app on Android or IOS
 
 `npm run android` or `npm run ios`
 
+
 2. Run `npm install` to install dependencies.
 3. Run `npm run android` or `npm run ios` to start the application on Android or iOS.
+
