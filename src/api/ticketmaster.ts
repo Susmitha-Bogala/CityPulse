@@ -1,13 +1,9 @@
 import axios from 'axios';
+import ConfigVariable from './Config';
 
-const API_KEY = 'zzt9X2L3FwbYmgkvswyUgRxkyHEVZXGZ';
+const API_KEY = ConfigVariable.apiKey;
 
-// Consumer Key:   zzt9X2L3FwbYmgkvswyUgRxkyHEVZXGZ
-// Consumer Secret:  qUP8JrZOZ2G2vP93
-// Application Name: susmitha-App
-// Redirect URI 1: https://oauth.ticketmaster.com/oauth/login
-
-const BASE_URL = 'https://app.ticketmaster.com/discovery/v2/';
+const BASE_URL = ConfigVariable.baseUrl;
 
 export const searchEvents = async (keyword: string, city: string) => {
   try {
