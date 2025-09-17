@@ -1,7 +1,7 @@
 export interface Event {
   id: string;
   name: string;
-  images?: { url: string }[];
+  images?: {url: string}[];
   dates?: {
     start?: {
       localDate?: string;
@@ -11,8 +11,8 @@ export interface Event {
   _embedded?: {
     venues?: Array<{
       name?: string;
-      city?: { name?: string };
-      state?: { stateCode?: string };
+      city?: {name?: string};
+      state?: {stateCode?: string};
       location?: {
         latitude?: string;
         longitude?: string;
@@ -24,7 +24,7 @@ export interface Event {
 export interface TMEvent {
   id: string;
   name: string;
-  images?: { url: string }[];
+  images?: {url: string}[];
   dates?: {
     start?: {
       localDate?: string;
@@ -34,7 +34,7 @@ export interface TMEvent {
   _embedded?: {
     venues?: Array<{
       name?: string;
-      city?: { name?: string };
+      city?: {name?: string};
     }>;
   };
 }
@@ -44,8 +44,8 @@ export type LocationProps = {
     _embedded?: {
       venues?: Array<{
         name?: string;
-        city?: { name?: string };
-        state?: { stateCode?: string };
+        city?: {name?: string};
+        state?: {stateCode?: string};
         location?: {
           latitude?: string;
           longitude?: string;
@@ -61,3 +61,10 @@ export interface EventCardProps {
 }
 
 export type SnackbarType = 'success' | 'error' | 'info' | 'warning';
+
+export interface homeScreenStateType {
+  keyword: string;
+  loading: boolean;
+  events: TMEvent[];
+  city: string;
+}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useReducer} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {searchEvents, getEventDetails} from '../api/ticketmaster';
 import {useTranslation} from 'react-i18next';
-import {TMEvent} from '../types/event';
+import {TMEvent, homeScreenStateType} from '../types/event';
 import styles from '../styles';
 import {colors} from '../colors';
 import EventCard from '../components/EventCard';
@@ -23,21 +23,55 @@ const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
 
   const {t} = useTranslation();
-  const [keyword, setKeyword] = useState('');
-  const [city, setCity] = useState('');
-  const [events, setEvents] = useState<TMEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [keyword, setKeyword] = useState('');
+  // const [city, setCity] = useState('');
+  // const [events, setEvents] = useState<TMEvent[]>([]);
+  // const [loading, setLoading] = useState(true);
   const {showSnackbar} = useSnackbar();
+
+  const initalState: homeScreenStateType = {
+    keyword: '',
+    city: '',
+    events: [],
+    loading: false,
+  };
+
+  const updateKeyword = 'UPDATE_KEYWORD';
+  const updateCity = 'UPDATE_CITY';
+  const updateEvents = 'UPDATE_EVENTS';
+  const updateLoading = 'UPDATE_LOADER';
+
+  const reducer = (state = initalState, action: any) => {
+    const {type, payload} = action;
+    switch (type) {
+      case updateKeyword:
+        return {...state, keyword: payload};
+      case updateEvents:
+        return {...state, events: payload};
+      case updateLoading:
+        return {...state, loading: payload};
+      case updateCity:
+        return {...state, city: payload};
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initalState);
+  const {keyword, city, loading, events} = state;
 
   const fetchEvents = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
+      dispatch({type: updateLoading, payload: true});
       const res = await getEventDetails();
-      setEvents(res || []);
+      // setEvents(res || []);
+      dispatch({type: updateEvents, payload: res || []});
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      dispatch({type: updateLoading, payload: false});
     }
   }, []);
 
@@ -49,7 +83,8 @@ const HomeScreen: React.FC = () => {
     if (keyword?.length >= 3 || city?.length >= 3) {
       const res = await searchEvents(keyword, city);
       if (res?.length > 0) {
-        setEvents(res);
+        // setEvents(res);
+        dispatch({type: updateEvents, payload: res});
       } else {
         showSnackbar(
           `${t('no_events_found')} "${keyword}" "${city}"`,
@@ -71,7 +106,7 @@ const HomeScreen: React.FC = () => {
   };
 
   const isSearchDisabled =
-    loading || (keyword.length === 0 && city.length === 0);
+    loading || (keyword?.length === 0 && city?.length === 0);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -80,14 +115,16 @@ const HomeScreen: React.FC = () => {
           placeholder={t('search_placeholder_keyword')}
           placeholderTextColor={colors.lightGray}
           value={keyword}
-          onChangeText={setKeyword}
+          onChangeText={value => {
+            dispatch({type: updateKeyword, payload: value});
+          }}
           style={styles.input}
         />
         <TextInput
           placeholder={t('search_placeholder_city')}
           placeholderTextColor={colors.lightGray}
           value={city}
-          onChangeText={setCity}
+          onChangeText={value => dispatch({type: updateCity, payload: value})}
           style={styles.input}
         />
         <TouchableOpacity
